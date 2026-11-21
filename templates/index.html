@@ -9,7 +9,17 @@
 <h1>💉 Vaccine Information Portal - Belagavi</h1>
 <p>Find vaccine price & availability in your locality</p>
 
-<a href="/centres">View All Centres</a> | <a href="/admin">Admin Panel</a>
+<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:10px 0;">
+  <a href="/centres" style="background:#2563eb; color:white; padding:8px 14px; border-radius:8px; text-decoration:none; font-weight:bold;">View All Centres</a>
+  <a href="/admin" style="background:#111827; color:white; padding:8px 14px; border-radius:8px; text-decoration:none; font-weight:bold;">Admin Panel</a>
+  {% if session.get('user_id') %}
+    <span>Hello, <b>{{ session.get('name') }}</b> ({{ session.get('role') }})</span>
+    <a href="/logout" style="background:#dc2626; color:white; padding:8px 14px; border-radius:8px; text-decoration:none; font-weight:bold;">Logout</a>
+  {% else %}
+    <a href="/login" style="background:#16a34a; color:white; padding:8px 14px; border-radius:8px; text-decoration:none; font-weight:bold;">Login</a>
+    <a href="/register" style="background:#f97316; color:white; padding:8px 14px; border-radius:8px; text-decoration:none; font-weight:bold;">Register</a>
+  {% endif %}
+</div>
 <br><br><a href="/child-schedule" style="display:block;text-align:center;background:#ff6b00;color:white;padding:14px;border-radius:10px;text-decoration:none;margin-top:10px;font-weight:bold">👶 Child Vaccine Schedule Calculator</a>
 <hr>
 

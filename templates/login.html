@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login - Vaccine Info</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div style="max-width:400px;margin:60px auto;background:white;padding:25px;border-radius:12px;">
+<h2>Login</h2>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for cat, msg in messages %}
+    <p style="color:{% if cat=='error' %}red{% else %}green{% endif %}">{{ msg }}</p>
+  {% endfor %}
+{% endwith %}
+
+<form method="POST">
+  <label>Email</label><br>
+  <input type="email" name="email" required style="width:100%;padding:10px;margin:5px 0 12px;"><br>
+  <label>Password</label><br>
+  <input type="password" name="password" required style="width:100%;padding:10px;margin:5px 0 12px;"><br>
+  <button type="submit" style="width:100%;padding:12px;background:#2563eb;color:white;border:none;border-radius:8px;">Login</button>
+</form>
+
+<p style="margin-top:15px;">No account? <a href="/register">Register</a></p>
+<p>Try demo: <br>admin@vaccine.com / admin123<br>worker@vaccine.com / worker123<br>parent@vaccine.com / parent123</p>
+<p><a href="/">← Back to Home</a></p>
+</div>
+</body>
+</html>

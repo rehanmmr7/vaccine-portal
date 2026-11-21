@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 from datetime import date
 
 app = Flask(__name__)
+app.secret_key = "vaccine-secret-key"
 DB = "database.db"
 
 # ---------- DATABASE SETUP ----------
@@ -35,6 +37,23 @@ def init_db():
         last_updated TEXT,
         FOREIGN KEY (vaccine_id) REFERENCES vaccines (id)
     )''')
+    conn.execute('''CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        email TEXT UNIQUE,
+        password TEXT,
+        role TEXT,
+        centre TEXT DEFAULT 'All'
+    )''')
+
+    # Demo accounts - only first time
+    if not conn.execute("SELECT * FROM users WHERE email='admin@vaccine.com'").fetchone():
+        conn.execute("INSERT INTO users (name,email,password,role) VALUES (?,?,?,?)",
+            ("Admin","admin@vaccine.com", generate_password_hash("admin123"), "admin"))
+        conn.execute("INSERT INTO users (name,email,password,role,centre) VALUES (?,?,?,?,?)",
+            ("Health Worker","worker@vaccine.com", generate_password_hash("worker123"), "worker", "Belagavi City"))
+        conn.execute("INSERT INTO users (name,email,password,role) VALUES (?,?,?,?)",
+            ("Demo Parent","parent@vaccine.com", generate_password_hash("parent123"), "parent"))
     conn.commit()
 
     # Add sample data only if empty
@@ -107,6 +126,8 @@ def all_centres():
 # ---------- ADMIN PAGES ----------
 @app.route("/admin")
 def admin():
+    if session.get('role') != 'admin':
+        return redirect('/login')
     conn = get_db()
     vaccines = conn.execute("SELECT * FROM vaccines").fetchall()
     centres = conn.execute("SELECT centres.*, vaccines.name as vaccine_name FROM centres JOIN vaccines ON centres.vaccine_id = vaccines.id").fetchall()
@@ -192,6 +213,46 @@ def child_schedule():
                 schedule.append({"label": label, "due": due.strftime("%d %b %Y"), "vaccines": vaccines, "status": status, "color": color})
     return render_template("child_schedule.html", schedule=schedule, dob=dob_str, child_name=child_name)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        conn = sqlite3.connect(DB)
+        conn.row_factory = sqlite3.Row
+        user = conn.execute("SELECT * FROM users WHERE email=?", (email,)).fetchone()
+        conn.close()
+        if user and check_password_hash(user['password'], password):
+            session['user_id'] = user['id']
+            session['name'] = user['name']
+            session['role'] = user['role']
+            session['centre'] = user['centre']
+            return redirect('/')
+        flash("Wrong email or password", "error")
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = generate_password_hash(request.form['password'])
+        conn = sqlite3.connect(DB)
+        try:
+            conn.execute("INSERT INTO users (name,email,password,role) VALUES (?,?,?,?)",
+                         (name, email, password, "parent"))
+            conn.commit()
+            flash("Account created! Please login.", "success")
+            return redirect(url_for('login'))
+        except:
+            flash("Email already exists", "error")
+        conn.close()
+    return render_template('register.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 import os
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
