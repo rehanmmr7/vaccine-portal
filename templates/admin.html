@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head><title>Admin</title>
+<link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<div class="container">
+<a href="/">← Home</a>
+<h1>Admin Panel</h1>
+
+<h2>Add Vaccine</h2>
+<form method="POST" action="/admin/add_vaccine">
+<input name="name" placeholder="Vaccine Name" required>
+<input name="disease" placeholder="Disease">
+<input name="purpose" placeholder="Purpose">
+<input name="age_group" placeholder="Age Group e.g. All ages">
+<input name="dosage" placeholder="Dosage">
+<select name="category"><option>Routine</option><option>Travel</option></select>
+<button>Add Vaccine</button>
+</form>
+
+<h2>Add Centre / Price</h2>
+<form method="POST" action="/admin/add_centre">
+<select name="vaccine_id">{% for v in vaccines %}<option value="{{ v['id'] }}">{{ v['name'] }}</option>{% endfor %}</select>
+<input name="centre_name" placeholder="Centre Name" required>
+<input name="city" placeholder="City" value="Belagavi" required>
+<input name="address" placeholder="Address">
+<input name="phone" placeholder="Phone">
+<input name="price" placeholder="Price" type="number" required>
+<select name="availability"><option>Available</option><option>Limited Stock</option><option>Out of Stock</option></select>
+<button>Add Centre</button>
+</form>
+
+<h2>Vaccines</h2>
+{% for v in vaccines %}
+<p>{{ v['name'] }} - <a href="/admin/delete_vaccine/{{ v['id'] }}">Delete</a></p>
+{% endfor %}
+
+<h2>Centres</h2>
+{% for c in centres %}
+<p>{{ c['centre_name'] }} ({{ c['vaccine_name'] }}) - ₹{{ c['price'] }} - {{ c['availability'] }} - <a href="/admin/delete_centre/{{ c['id'] }}">Delete</a></p>
+{% endfor %}
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>All Centres</title>
+<link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<div class="container">
+<a href="/">← Home</a>
+<h1>All Vaccination Centres</h1>
+<form method="GET"><input type="text" name="city" value="{{ city }}" placeholder="Filter by city e.g. Belagavi"><button>Search</button></form>
+{% for c in centres %}
+<div class="card">
+<h3>{{ c['centre_name'] }} - {{ c['vaccine_name'] }}</h3>
+<p>{{ c['address'] }}, {{ c['city'] }} | 📞 {{ c['phone'] }}</p>
+<p><b>Price:</b> ₹{{ c['price'] }} | <b>Status:</b> {{ c['availability'] }}</p>
+<p><small>Last Updated: {{ c['last_updated'] }}</small></p>
+</div>
+{% endfor %}
+</div>
+</body>
+</html>

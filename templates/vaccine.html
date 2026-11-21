@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ vaccine['name'] }}</title>
+<link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<div class="container">
+<a href="/">← Back</a>
+<h1>{{ vaccine['name'] }}</h1>
+<p><b>Disease:</b> {{ vaccine['disease'] }}</p>
+<p><b>Purpose:</b> {{ vaccine['purpose'] }}</p>
+<p><b>Age Group:</b> {{ vaccine['age_group'] }}</p>
+<p><b>Dosage:</b> {{ vaccine['dosage'] }}</p>
+<p><b>Category:</b> {{ vaccine['category'] }}</p>
+
+<h2>Centres in {{ city or 'Belagavi' }}</h2>
+<form method="GET"><input type="text" name="city" value="{{ city or 'Belagavi' }}" placeholder="Enter city"><button>Filter</button></form>
+
+{% for c in centres %}
+<div class="card">
+<h3>{{ c['centre_name'] }}</h3>
+<p>{{ c['address'] }} | {{ c['city'] }}</p>
+<p>📞 {{ c['phone'] }}</p>
+<p><b>Price:</b> ₹{{ c['price'] }}</p>
+<p><b>Status:</b> {{ c['availability'] }}</p>
+<p><small>Last Updated: {{ c['last_updated'] }}</small></p>
+</div>
+{% else %}
+<p>No centres found in this city.</p>
+{% endfor %}
+<p class="disclaimer">⚠️ Price is indicative. Call centre to confirm.</p>
+</div>
+</body>
+</html>

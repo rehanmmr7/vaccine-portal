@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f7ff;
+    margin: 0;
+    padding: 0;
+    color: #222;
+}
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+h1 { color: #0b5ed7; font-size: 28px; }
+h2 { margin-top: 30px; color: #333; }
+a { color: #0b5ed7; text-decoration: none; }
+input, select {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+button {
+    background: #0b5ed7;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+button:hover { background: #0848a8; }
+.card {
+    border: 1px solid #e1e1e1;
+    padding: 16px;
+    border-radius: 12px;
+    margin: 14px 0;
+    background: #f9fbff;
+}
+.badge {
+    background: #d1e7ff;
+    color: #0b5ed7;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+.disclaimer {
+    background: #fff3cd;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-top: 20px;
+}
+form { margin: 15px 0; }

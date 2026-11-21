@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><title>Child Vaccine Schedule</title>
+<link rel="stylesheet" href="/static/style.css">
+<style>.card{background:#fff;padding:20px;border-radius:12px;max-width:700px;margin:20px auto} table{width:100%;border-collapse:collapse} th,td{padding:10px;border-bottom:1px solid #eee;text-align:left} .red{color:red;font-weight:bold} .orange{color:orange;font-weight:bold} .green{color:green}</style>
+</head>
+<body>
+<div class="card">
+<h1>👶 Child Vaccine Schedule</h1>
+<p>Enter your child's Date of Birth - we will show full schedule as per India (UIP).</p>
+<form method="POST">
+<input type="text" name="child_name" placeholder="Child Name (eg. Aarav)" value="{{ child_name }}" required style="width:100%;padding:12px;margin:8px 0">
+<input type="date" name="dob" value="{{ dob }}" required style="width:100%;padding:12px;margin:8px 0">
+<button type="submit" style="width:100%;padding:12px;background:#007bff;color:white;border:none;border-radius:8px">Show My Schedule</button>
+</form>
+{% if schedule %}
+<h2>Schedule for {{ child_name }} - Born {{ dob }}</h2>
+<table><tr><th>Age</th><th>Due Date</th><th>Vaccines</th><th>Status</th></tr>
+{% for s in schedule %}
+<tr><td>{{ s.label }}</td><td>{{ s.due }}</td><td>{{ s.vaccines }}</td><td class="{{ s.color }}">{{ s.status }}</td></tr>
+{% endfor %}
+</table>
+<p style="font-size:13px;color:#666">* General info from UIP India. Always confirm with your paediatrician in Belagavi.</p>
+{% endif %}
+<br><a href="/">← Back to Home</a>
+</div>
+</body>
+</html>
